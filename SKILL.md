@@ -1,18 +1,20 @@
 ---
 name: vibecode-workflow
 description: "Coding workflow methodology: plan, search, test, verify"
-version: 1.0.2
+version: 1.0.3
 ---
 
 # Coding Workflow
 
-A disciplined coding methodology: **plan architecture first → search before build → implement & test in iterative loop → verify fully**.
+A disciplined coding methodology: **plan architecture first → search before
+build → implement & test in iterative loop → verify fully**.
 
 ---
 
 ## When to Use
 
-**Every coding task.** This is the default workflow. Do not start writing code without going through each phase.
+**Every coding task.** This is the default workflow. Do not start writing code
+without going through each phase.
 
 ---
 
@@ -22,22 +24,23 @@ A disciplined coding methodology: **plan architecture first → search before bu
 Phase 1  ──  Global Route Planning     →  Architecture + Method Map
 Phase 2  ──  Ponytail + GitHub Search   →  Reuse + Minimal Build
 
-               ╭─────────────────────────╮
-               │                         ▼
-Phase 3  ──  Implementation (one module) ──┐
-               │                            │ pass
-               ▼                            │
-Phase 4  ──  Incremental Testing ──────────╯
-               │             ▲
-               │   fail      │
-               ╰── 修正 ──────╯
-                         │
-                    all modules done
-                         ▼
+Phase 3  ──  Implementation (one module at a time)
+Phase 4  ──  Incremental Testing (test that module)
+     ↑                    │
+     ╰──── ← pass ──────╯
+          ← fail → fix → retest
+
 Phase 5  ──  Full Verification           →  Complete System Test
 ```
 
-Phase 3 and Phase 4 form an **iterative loop**: implement one module → test it → if pass, go back to implement the next module → if fail, fix and retest. Repeat until all modules are done, then proceed to Phase 5.
+Phase 3 and Phase 4 form an **iterative loop**:
+
+1. Implement ONE module/block (Phase 3)
+2. Test it immediately (Phase 4)
+   - PASS → go back to step 1 for the next module
+   - FAIL → fix, retest, then back to step 1 for next module
+3. Repeat until ALL modules are done
+4. Proceed to Phase 5 (Full Verification)
 
 ---
 
@@ -52,7 +55,8 @@ Phase 3 and Phase 4 form an **iterative loop**: implement one module → test it
 - Identify all files that will be touched or created.
 
 ### 1.2 Method Call Map
-- List every function, method, and API endpoint that needs to exist or be modified.
+- List every function, method, and API endpoint that needs to exist or be
+  modified.
 - For each: responsibility, inputs, outputs.
 - Identify call chains: which function calls which.
 
@@ -61,7 +65,8 @@ Phase 3 and Phase 4 form an **iterative loop**: implement one module → test it
 - What new dependencies would be needed? (Ask before adding.)
 
 ### 1.4 Output
-A short plan (3–10 lines) describing: files to touch, functions to create or modify, and the test strategy.
+A short plan (3–10 lines) describing: files to touch, functions to create or
+modify, and the test strategy.
 
 ---
 
@@ -69,9 +74,11 @@ A short plan (3–10 lines) describing: files to touch, functions to create or m
 
 ### 2.1 Search Before Build
 Before writing custom code:
-1. **Search GitHub** for existing repos, gists, or snippets that solve the same problem.
+1. **Search GitHub** for existing repos, gists, or snippets that solve the
+   same problem.
 2. **Check stdlib** — can the language's standard library cover this?
-3. **Check installed dependencies** — does something already installed handle this?
+3. **Check installed dependencies** — does something already installed handle
+   this?
 
 ### 2.2 Ponytail Ladder
 Stop at the first rung that holds:
@@ -86,43 +93,48 @@ Stop at the first rung that holds:
 | 6 | Only then: the minimum code that works. |
 
 ### 2.3 Ponytail Rules
-- No unrequested abstractions (no interface with one implementation, no factory for one product).
+- No unrequested abstractions (no interface with one implementation, no factory
+  for one product).
 - No boilerplate "for later" — later can scaffold for itself.
 - Deletion over addition. Boring over clever.
 - Fewest files possible. Shortest working diff wins.
-- Mark deliberate simplifications with `ponytail:` comments noting the ceiling and upgrade path.
+- Mark deliberate simplifications with `ponytail:` comments noting the ceiling
+  and upgrade path.
 
 ---
 
 ## Phase 3 & 4 — Iterative Implement & Test Loop
 
-Phases 3 and 4 work together as a loop. Do NOT implement everything first and test later.
+Phases 3 and 4 work together as a loop. Do NOT implement everything first and
+test later.
 
 ### The Loop
 
 ```
-        ┌─────────────────────────────────────┐
-        │                                     │
-        │  Phase 3: Implement one module      │
-        │        │                            │
-        │        ▼                            │
-        │  Phase 4: Test that module          │
-        │        │                            │
-        │   ┌────┴────┐                       │
-        │   │         │                       │
-        │  PASS      FAIL                     │
-        │   │         │                       │
-        │   │    Fix it │                     │
-        │   │         │                       │
-        │   └────┬────┘                       │
-        │        │                            │
-        │   more modules? ──yes──→ back to 3  │
-        │        │                            │
-        │       no                            │
-        │        │                            │
-        │        ▼                            │
-        │  Proceed to Phase 5                 │
-        └─────────────────────────────────────┘
+         ┌─────────────────────────────┐
+         │  Phase 3: Implement one     │
+         │  module / block             │
+         └──────────┬──────────────────┘
+                    │
+                    ▼
+         ┌─────────────────────────────┐
+         │  Phase 4: Test that module  │
+         └──────────┬──────────────────┘
+                    │
+             ┌──────┴──────┐
+             │             │
+            PASS          FAIL
+             │             │
+             │        Fix code
+             │             │
+             └──────┬──────┘
+                    │
+             ┌──────┴──────┐
+             │             │
+        more modules?  All done
+             │             │
+             ▼             ▼
+     back to Phase 3   Phase 5
 ```
 
 ### Phase 3 — Implementation
@@ -140,7 +152,8 @@ Phases 3 and 4 work together as a loop. Do NOT implement everything first and te
 
 ### Phase 4 — Incremental Testing
 
-**After writing ONE unit, test it immediately. Do not write a second unit before testing the first.**
+**After writing ONE unit, test it immediately. Do not write a second unit
+before testing the first.**
 
 #### 4.1 What Counts as a Unit
 - A single function
@@ -173,7 +186,8 @@ Phases 3 and 4 work together as a loop. Do NOT implement everything first and te
 
 ## Phase 5 — Full Verification
 
-**Only enter Phase 5 when ALL modules are implemented and individually tested.** This is a mandatory gate — do not deliver without passing this phase.
+**Only enter Phase 5 when ALL modules are implemented and individually tested.**
+This is a mandatory gate — do not deliver without passing this phase.
 
 ### 5.1 Full Test Checklist
 - [ ] All syntax checks pass (all files).
@@ -183,10 +197,12 @@ Phases 3 and 4 work together as a loop. Do NOT implement everything first and te
 - [ ] No hardcoded paths or credentials left behind.
 - [ ] No dead code or unused imports.
 - [ ] No regression: existing features still work.
-- [ ] *(Self-reference)* This skill itself was followed: verify before publishing.
+- [ ] *(Self-reference)* This skill itself was followed: verify before
+  publishing.
 
 ### 5.2 Sign-off
-Only after all checks pass, deliver the result to the user. If any check fails, go back to Phase 4 to fix, then re-run Phase 5.
+Only after all checks pass, deliver the result to the user. If any check fails,
+go back to Phase 4 to fix, then re-run Phase 5.
 
 ### 5.3 Self-Correction
 If the user points out a mistake that Phase 5 should have caught:
@@ -199,7 +215,8 @@ If the user points out a mistake that Phase 5 should have caught:
 ## Error Recovery
 
 If a test fails at any phase:
-1. **Read the error message carefully** — identify the exact line and error type.
+1. **Read the error message carefully** — identify the exact line and error
+   type.
 2. **Fix only the failing code** — do not rewrite unrelated parts.
 3. **Re-run the test** for that unit.
 4. If in Phase 3/4 loop: retest, then continue to next module.
@@ -220,28 +237,33 @@ If a test fails at any phase:
 │  2. SEARCH   ──── GitHub 搜尋 + ponytail 最小化            │
 │                    (不重複造輪子)                          │
 │                                                           │
-│      ╭────────────────────────────────────────╮            │
-│      │  3. IMPLEMENT ── 實作一個 module/block  │            │
-│      │        │                               │            │
-│      │  4. TEST ──── 局部測試 ←── pass ───╮   │            │
-│      │        │                      │      │            │
-│      │     fail 修正 → retest ──────╯      │            │
-│      │        │                               │            │
-│      ╰──── 全部完成 ──→ 5. VERIFY ─────────╯            │
+│  3. IMPLEMENT ─ 實作一個 module/block                      │
+│                    (做一個)                                │
+│        │                                                  │
+│  4. TEST    ──── 局部測試 ←── pass ── 回 Phase 3          │
+│        │                   (下一塊)                       │
+│     fail ── 修正 → retest                                 │
+│        │                                                  │
+│     全部做完 ──→ Phase 5                                  │
 │                                                           │
-│  5. VERIFY   ──── 全局驗證 (全部完成才做)                 │
+│  5. VERIFY   ──── 全局驗證 (全部完成才做)                  │
 │                    (沒有遺漏才交貨)                        │
 │                                                           │
 └───────────────────────────────────────────────────────────┘
 ```
 
+---
+
 ## Changelog
+
+### 1.0.3 (2026-07-11)
+- Fixed all ASCII art alignment (box drawing characters)
+- Simplified loop diagram for readability
+- Changed overview diagram to text-based loop description
 
 ### 1.0.2 (2026-07-11)
 - Fixed workflow to be iterative: Phase 3 ↔ Phase 4 loop
-- Updated ASCII diagram to show the loop
-- Added iterative loop explanation and diagram in Phase 3&4 section
-- Clarified: implement ONE module → test → repeat
+- Updated diagrams to show the loop
 
 ### 1.0.1 (2026-07-11)
 - Added missing Phase 3 (Implementation)
