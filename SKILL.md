@@ -1,26 +1,28 @@
 ---
 name: vibecode-workflow
-description: "Coding workflow methodology: plan, search, test, verify"
-version: 2.0.0
+description: "Enterprise coding workflow: Plan $\rightarrow$ Search $\rightarrow$ Implement $\rightarrow$ Test $\rightarrow$ Verify with full Audit Trail"
+version: 2.2.0
 ---
 
 <!--
 # AGENT ENFORCEMENT GUARDRAIL
 # MANDATORY BEHAVIOR RULES:
 # 1. Every response MUST start with a status tag: [CURRENT_PHASE: X]
-# 2. STRICTLY PROHIBITED from advancing to Phase N+1 until the user explicitly approves the output of Phase N (e.g., "Proceed to Phase 2").
-# 3. ZERO-CODE LOCK: In Phase 1 and Phase 2, the Agent's output window MUST contain 0 lines of implementation code. If any code snippet is generated before Phase 3, it is a FATAL PROTOCOL VIOLATION.
-# 4. MICRO-COMMIT RULE: The Agent can only implement ONE function/module per response. After implementing that single unit, the Agent MUST STOP WRITING and output the exact Phase 4 verification command, handing the turn back to the user.
-# 5. TOOL-USE ENFORCEMENT: In Phase 2, you MUST execute at least one search/grep query relevant to the task and print the tool output log. "Thinking about it" is not searching.
-# 6. SIGN-OFF BLUEPRINT: Phase 1.4 output MUST follow the prescribed Markdown template.
-# 7. DEBT LOGGING: Every Ponytail shortcut or workaround MUST be logged in DEBT.md before delivery.
+# 2. STRICTLY PROHIBITED from advancing to Phase N+1 until the user explicitly approves the output of Phase N.
+# 3. ZERO-CODE LOCK: In Phase 1 and Phase 2, the Agent's output window MUST contain 0 lines of implementation code.
+# 4. MICRO-COMMIT RULE: Only ONE unit per response. After implementing, STOP and output Phase 4 command.
+# 5. TOOL-USE ENFORCEMENT: Phase 2 MUST execute at least one search query and print the log.
+# 6. AUDIT TRAIL PERSISTENCE: 
+#    - Phase 1: Must initialize ARCHITECTURE.md and AI_RULES.md.
+#    - Phase 2: Must log technical choices in DECISIONS.md.
+#    - Phase 3/4: Must update PROGRESS.md after every successful unit test.
+# 7. DEBT LOGGING: Every ponytail shortcut MUST be logged in DEBT.md.
 # -------------------------------------------------------------------------------------------
 -->
 
-# Coding Workflow
+# Coding Workflow v2.2.0 (The Audit Trail Edition)
 
-A disciplined coding methodology: **plan architecture first → search before
-build → implement & test in iterative loop → verify fully**.
+A disciplined coding methodology designed for high-complexity projects, ensuring that **decisions are logged**, **progress is persisted**, and **architecture is living**.
 
 ---
 
@@ -28,16 +30,9 @@ build → implement & test in iterative loop → verify fully**.
 
 To prevent skipping phases and ensure "muscle memory" internalization:
 
-1.  **Status Tagging**: Every single response from the Agent MUST begin with: `[CURRENT_PHASE: X]` (where X is the current phase number).
-2.  **Phase Gating**: The Agent is STRICTLY PROHIBITED from advancing to Phase N+1 until the user explicitly approves the output of Phase N (e.g., "Proceed to Phase 2").
-3.  **Zero-Code Lock**: During **Phase 1** and **Phase 2**, the Agent's output MUST NOT contain any implementation code. If code is generated before Phase 3, it is a fatal protocol violation.
-
----
-
-## When to Use
-
-**Every coding task.** This is the default workflow. Do not start writing code
-without going through each phase.
+1.  **Status Tagging**: Every single response MUST begin with: `[CURRENT_PHASE: X]`.
+2.  **Phase Gating**: No advancement to Phase N+1 without explicit user approval.
+3.  **Zero-Code Lock**: Absolute prohibition of implementation code in Phase 1 & 2.
 
 ---
 
@@ -45,195 +40,85 @@ without going through each phase.
 
 ```
 Phase 0  ──  Agent State Machine (Status Tagging & Gating)
-Phase 1  ──  Global Route Planning     →  Architecture + Method Map
-Phase 2  ──  Ponytail + GitHub Search   →  Reuse + Minimal Build
+Phase 1  ──  Planning & Foundation (Architecture, Rules, P5 Plan)
+Phase 2  ──  Minimalist Discovery & Decisions (Search + Decision Log)
 
-Phase 3  ──  Implementation (one module at a time)
-Phase 4  ──  Incremental Testing (test that module)
+Phase 3  ──  Implementation (One unit at a time)
+Phase 4  ──  Incremental Testing (Assert + Progress Log)
      ↑                    │
      ╰──── ← pass ──────╯
           ← fail → fix → retest
 
-Phase 5  ──  Full Verification           →  Complete System Test
+Phase 5  ──  Full Verification & Final Audit (Sign-off + Debt)
 ```
-
-Phase 3 and Phase 4 form an **iterative loop**:
-
-1. Implement ONE module/block (Phase 3)
-2. Test it immediately (Phase 4)
-   - PASS → go back to step 1 for the next module
-   - FAIL → fix, retest, then back to step 1 for next module
-3. Repeat until ALL modules are done
-4. Proceed to Phase 5 (Full Verification)
 
 ---
 
-## Phase 1 — Global Route Planning
+## Phase 1 — Planning & Foundation
 
-**Before writing a single line of code**, plan the complete route.
+**Establish the project's "Constitution" and "Map" before coding.**
 
-### 1.1 Architecture Overview
-- What are the inputs and outputs?
-- What components exist? (frontend, backend, database, external APIs)
-- Draw the data flow: from user action to result and back.
-- Identify all files that will be touched or created.
-- **Impact Analysis**: Identify if this change modifies any shared utility, database schema, or common API. If yes, list the specific dependent modules that must be re-tested during Phase 5 to prevent regression.
+### 1.1 Architecture & Rules Initialization
+- **Create `AI_RULES.md`**: Define the project-specific coding standards, forbidden patterns, and testing requirements.
+- **Create `ARCHITECTURE.md`**: Define the high-level design, component map, and critical data paths.
+- **Impact Analysis**: Identify regressions in shared components.
 
 ### 1.2 Method Call Map
-- List every function, method, and API endpoint that needs to exist or be
-  modified.
-- For each: responsibility, inputs, outputs.
-- Identify call chains: which function calls which.
+- Map every function, input, output, and call chain.
 
 ### 1.3 Context & Dependency Control
-- **Dependency Check**: What dependencies are already installed? What new dependencies would be needed? (Ask before adding.)
 - **Context Pruning**: Define the absolute *minimum* set of files required for the task. Explicitly list files that must be ignored or dropped from the context window to prevent attention dilution and token bloat.
 
 ### 1.4 Output: [Phase 1.4 Sign-off Blueprint]
-The Agent MUST output the plan using this exact template (`templates/blueprint.md`). 
-
-**Crucially, this blueprint must bridge the gap to the end: you must define the Phase 5 Comprehensive Verification Plan here, ensuring that you aren't just "winging it" at the final stage.**
+Use `templates/blueprint.md`. **Must include the Phase 5 Comprehensive Verification Plan.**
 
 ---
 
-## Phase 2 — Ponytail + GitHub Search
+## Phase 2 — Minimalist Discovery & Decisions
 
-### 2.1 Search Verification (Tool-use Enforcement)
-Before writing custom code, you MUST NOT "just think" about it.
-1. **Execute Search**: If you have access to search tools (GitHub, Google, or local `grep`/`find`), you **MUST** execute at least one search query relevant to the task.
-2. **Log Results**: Print the tool's output log to show proof of search.
-3. **Apply Findings**: Check if existing solutions exist in:
-   - GitHub (repos, gists, snippets)
-   - Language Standard Library (stdlib)
-   - Currently installed dependencies
+### 2.1 Search Verification
+- Execute search tools (grep, GitHub, etc.) and print the log.
 
-### 2.2 Ponytail Ladder
-Stop at the first rung that holds:
+### 2.2 Decision Logging (`DECISIONS.md`)
+- Whenever a technical choice is made (e.g., selecting a library, choosing a data structure), it **MUST** be logged in `DECISIONS.md`.
+- Record: Decision $\rightarrow$ Alternatives $\rightarrow$ Reason $\rightarrow$ Risk.
 
-| Rung | Question |
-|------|----------|
-| 1 | **Does this need to exist at all?** YAGNI — skip if not strictly needed. |
-| 2 | **Stdlib does it?** Use it. |
-| 3 | **Platform feature covers it?** CSS over JS, DB constraint over app code. |
-| 4 | **Already-installed dependency?** Never add a new dependency for what a few lines can do. |
-| 5 | **Can it be one line?** One line. |
-| 6 | Only then: the minimum code that works. |
-
-### 2.3 Ponytail Rules
-- No unrequested abstractions (no interface with one implementation, no factory
-  for one product).
-- No boilerplate "for later" — later can scaffold for itself.
-- Deletion over addition. Boring over clever.
-- Fewest files possible. Shortest working diff wins.
-- Mark deliberate simplifications with `ponytail:` comments noting the ceiling
-  and upgrade path.
+### 2.3 Ponytail Ladder
+- Stop at the first rung: YAGNI $\rightarrow$ Stdlib $\rightarrow$ Platform $\rightarrow$ Dependency $\rightarrow$ One-liner $\rightarrow$ Min-code.
 
 ---
 
 ## Phase 3 & 4 — Iterative Implement & Test Loop
 
-Phases 3 and 4 work together as a loop. Do NOT implement everything first and
-test later.
-
 ### The Micro-Commit Rule
-**To prevent "teleporting" through code, you must implement only ONE unit per response.**
-
-1. Implement ONE function, module, or block (Phase 3).
-2. **STOP WRITING** immediately after the code block.
-3. Output the exact Phase 4 verification command.
-4. Hand the turn back to the user to execute and provide the logs.
+Implement only ONE unit per response $\rightarrow$ STOP $\rightarrow$ Output Phase 4 command.
 
 ### Phase 3 — Implementation
+- Follow `ARCHITECTURE.md` and `AI_RULES.md`.
+- Mark simplifications with `ponytail:` comments.
 
-#### 3.1 Follow the Plan
-- Write code according to Phase 1's architecture and method map.
-- Start with the smallest, most independent unit first.
-- Keep functions focused — one responsibility per function.
-
-#### 3.2 Code Style
-- Use the ponytail ladder from Phase 2 to keep it minimal.
-- Avoid premature optimization. Make it work, then make it right.
-- Add comments for non-obvious logic and `ponytail:` simplifications.
-
-### Phase 4 — Incremental Testing
-
-**After writing ONE unit, test it immediately. Do not write a second unit
-before testing the first.**
-
-#### 4.1 What Counts as a Unit
-- A single function
-- A single API endpoint
-- A single UI component or view
-- A single file modification
-
-#### 4.2 Unit Test Checklist
-- [ ] Does it run without syntax or compile errors?
-- [ ] Does it produce the expected output for normal inputs?
-- [ ] Does it handle edge cases? (empty input, null, boundary values)
-- [ ] Does it fail gracefully on invalid input?
-
-#### 4.3 Test Methods
-
-| Language / Scope | Check | Command / Example |
-|-----------------|-------|-------------------|
-| JavaScript | **Logic Assert** | `node -e "const {fn} = require('./file'); console.assert(fn(1) === 2, 'Fail')"` |
-| Python | **Logic Assert** | `python3 -c "from file import fn; assert fn(1) == 2"` |
-| HTML | JS blocks | Extract `<script>` and run through `new Function()` with a test case |
-| API endpoint | Live test | `curl -s -w "%{http_code}" <url>` (Check for expected status code) |
-| Logic | Inline assert | Small demo script or `assert`-based self-check |
-| Syntax (Fast) | Syntax | `node -e "new Function(code)"` or `python3 -m py_compile file.py` |
-
-#### 4.4 Decision: Pass or Fail?
-- **PASS** → Go back to Phase 3 to implement the next module/block.
-- **FAIL** → Fix the code, re-run Phase 4 test, repeat until it passes.
-- Never skip to the next module when the current one is failing.
+### Phase 4 — Incremental Testing & Progress Tracking
+- **Logic Assertion**: Verify expected output (Use `templates/assertion.md`).
+- **Progress Persistence**: Upon a **PASS**, immediately update `PROGRESS.md` with the unit status and test date. This ensures the Agent can resume after a context wipe.
 
 ---
 
-## Phase 5 — Full Verification
+## Phase 5 — Full Verification & Final Audit
 
-**Only enter Phase 5 when ALL modules are implemented and individually tested.**
-This is a mandatory gate — do not deliver without passing this phase.
+### 5.1 Final Verification
+- Run the comprehensive plan defined in Phase 1.
+- Verify against `AI_RULES.md` (Coding standard audit).
 
-### 5.1 Full Test Checklist
-- [ ] All syntax checks pass (all files).
-- [ ] All API endpoints return expected status codes.
-- [ ] Frontend renders without console errors.
-- [ ] All user-facing features work end-to-end.
-- [ ] No hardcoded paths or credentials left behind.
-- [ ] No dead code or unused imports.
-- [ ] No regression: existing features still work.
-- [ ] *(Self-reference)* This skill itself was followed: verify before
-  publishing.
-
-### 5.2 Sign-off
-Only after all checks pass, deliver the result to the user. If any check fails,
-go back to Phase 4 to fix, then re-run Phase 5.
-
-**Commit Hygiene**: Before delivering, ensure the changes are split into clean, single-purpose commits following standard conventions (e.g., `feat:`, `fix:`). Each commit should represent one logical unit of work.
-
-**Technical Debt Ledger**: If any deliberate simplification (Ponytail Shortcut) or workaround was made to bypass a roadblock, the Agent MUST log this in a `DEBT.md` file (or a designated section) before delivery, specifying the upgrade path. No hidden debt allowed.
-
-### 5.3 Self-Correction
-If the user points out a mistake that Phase 5 should have caught:
-1. Fix the bug immediately.
-2. Add the missed check to the Phase 5 checklist so it's never missed again.
-3. Log the failure to prevent recurrence.
+### 5.2 Sign-off & Debt Audit
+- **Debt Ledger**: Ensure all `ponytail:` comments are logged in `DEBT.md`.
+- **Audit Trail Check**: Ensure `ARCHITECTURE.md`, `DECISIONS.md`, and `PROGRESS.md` are complete.
+- **Commit Hygiene**: Atomic, single-purpose commits.
 
 ---
 
 ## Error Recovery
 
-If a test fails at any phase:
-1. **Read the error message carefully** — identify the exact line and error
-   type.
-2. **Fix only the failing code** — do not rewrite unrelated parts.
-3. **Re-run the test** for that unit.
-4. If in Phase 3/4 loop: retest, then continue to next module.
-5. If in Phase 5: go back to Phase 4, fix, then re-run Phase 5.
-
-### Circuit Breaker
-If a single module/function fails Phase 4 testing or Phase 5 verification **more than 3 times consecutively**, STOP coding immediately. This indicates a fundamental flaw in Phase 1's architecture design or Phase 2's assumptions. **Forcibly rollback the git working directory to the last stable commit and return to Phase 1.**
+- **Circuit Breaker**: 3 consecutive failures on one unit $\rightarrow$ Rollback $\rightarrow$ Return to Phase 1.
 
 ---
 
@@ -241,66 +126,19 @@ If a single module/function fails Phase 4 testing or Phase 5 verification **more
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│  Coding Workflow                                          │
+│  Coding Workflow v2.2.0                                   │
 ├───────────────────────────────────────────────────────────┤
 │                                                           │
 │  0. STATE      ──── [CURRENT_PHASE: X] Tagging            │
 │                                                           │
-│  1. PLAN       ──── Architecture + Context Pruning + Blueprint │
-│                                                                 │
-│  2. SEARCH     ──── Tool-use Search + Ponytail                  │
-│                                                                 │
-│  3. IMPLEMENT  ─ 1 Unit → STOP → Phase 4 Command                │
-│                                                                 │
-│  4. TEST       ──── Incremental Logic Assertion                 │
-│                                                                 │
-│  5. VERIFY     ──── Full Test + Debt Ledger                     │
-│                                                                 │
+│  1. PLAN       ──── Arch + Rules + Blueprint + P5 Plan     │
+│                                                           │
+│  2. SEARCH     ──── Search + Decision Log (DECISIONS.md)   │
+│                                                           │
+│  3. IMPLEMENT  ─ 1 Unit → STOP → Phase 4 Command          │
+│                                                           │
+│  4. TEST       ──── Logic Assertion + Progress Log         │
+│                                                           │
+│  5. VERIFY     ──── Full Audit + Debt Ledger              │
 └───────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Changelog
-
-### 2.0.0 (2026-07-11)
-- **Major Version Upgrade**: Transitioned to Enterprise-grade maintenance workflow.
-- Upgraded **Phase 1.3** to **Context & Dependency Control**: Introduced **Context Pruning** to prevent attention dilution and token bloat in large projects.
-- Added **Technical Debt Ledger** to Phase 5.2: Mandatory logging of Ponytail shortcuts and workarounds in `DEBT.md` to prevent invisible technical debt.
-
-### 1.2.0 (2026-07-11)
-- Upgraded **Phase 4.3 Test Methods** from syntax checks to **Logic Assertions** (forcing verification of expected outputs).
-- Added **Commit Hygiene Lock** to Phase 5.2 (enforcing clean, single-purpose commits).
-
-### 1.1.1 (2026-07-11)
-- Added **Impact Analysis** to Phase 1.1 to prevent regressions in shared components.
-- Introduced **Circuit Breaker** in Error Recovery: rollback to Phase 1 after 3 consecutive failures.
-
-### 1.1.0 (2026-07-11)
-- Added **Agent Enforcement Guardrail** (HTML comment header)
-- Introduced **Phase 0: Agent State Machine** (Status Tagging & Gating)
-- Implemented **Zero-Code Lock** for Phases 1 & 2
-- Formalized **Phase 1.4 Sign-off Blueprint** (Template requirement)
-- Added **Search Verification** (Tool-use enforcement) in Phase 2.1
-- Enforced **Micro-Commit Rule** (One unit per response + mandatory stop) in Phase 3/4
-
-### 1.0.3 (2026-07-11)
-- Fixed all ASCII art alignment (box drawing characters)
-- Simplified loop diagram for readability
-- Changed overview diagram to text-based loop description
-
-### 1.0.2 (2026-07-11)
-- Fixed workflow to be iterative: Phase 3 ↔ Phase 4 loop
-- Updated diagrams to show the loop
-
-### 1.0.1 (2026-07-11)
-- Added missing Phase 3 (Implementation)
-- Fixed Quick Reference Card alignment
-- Added Self-Correction section to Phase 5
-- Phase 5 checklist now includes self-reference check
-
-### 1.0.0 (2026-07-11)
-- Initial release
-- Five-phase workflow: Plan → Search → Implement → Test → Verify
-- Ponytail integration with GitHub-first search
-- Incremental and full verification checklists

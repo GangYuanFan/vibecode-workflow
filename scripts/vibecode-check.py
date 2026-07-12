@@ -5,7 +5,15 @@ import sys
 from pathlib import Path
 
 # Configuration
-REQUIRED_ARTIFACTS = ["BLUEPRINT.md", "DEBT.md"]
+# Mandatory artifacts for a compliant project.
+REQUIRED_ARTIFACTS = [
+    "BLUEPRINT.md", 
+    "DEBT.md", 
+    "ARCHITECTURE.md", 
+    "DECISIONS.md", 
+    "PROGRESS.md", 
+    "AI_RULES.md"
+]
 PHASE_TAG_PATTERN = re.compile(r"\[CURRENT_PHASE: \d+\]")
 PONYTAIL_PATTERN = re.compile(r"ponytail:")
 
