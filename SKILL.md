@@ -1,7 +1,7 @@
 ---
 name: vibecode-workflow
 description: "Enterprise coding workflow: Plan $\rightarrow$ Search $\rightarrow$ Implement $\rightarrow$ Test $\rightarrow$ Verify with full Audit Trail"
-version: 2.2.0
+version: 3.0.0
 ---
 
 <!--
@@ -20,7 +20,7 @@ version: 2.2.0
 # -------------------------------------------------------------------------------------------
 -->
 
-# Coding Workflow v2.2.0 (The Audit Trail Edition)
+# Coding Workflow v3.0.0 (The Governance Edition)
 
 A disciplined coding methodology designed for high-complexity projects, ensuring that **decisions are logged**, **progress is persisted**, and **architecture is living**.
 
@@ -126,7 +126,7 @@ Implement only ONE unit per response $\rightarrow$ STOP $\rightarrow$ Output Pha
 
 ```
 ┌───────────────────────────────────────────────────────────┐
-│  Coding Workflow v2.2.0                                   │
+│  Coding Workflow v3.0.0                                   │
 ├───────────────────────────────────────────────────────────┤
 │                                                           │
 │  0. STATE      ──── [CURRENT_PHASE: X] Tagging            │

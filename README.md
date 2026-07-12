@@ -1,4 +1,4 @@
-# vibecode-workflow v2.2.0
+# vibecode-workflow v3.0.0
 
 **The AI Agent Absolute Defense Circle (AI Agent 絕對防禦圈)**
 
@@ -10,7 +10,7 @@ A disciplined, enterprise-grade coding methodology designed to tame AI laziness,
 
 ## 🛡️ The 4-Layer Defense Architecture
 
-v2.2.0 transforms the workflow from a "guideline" into an "enforced protocol" using four layers of constraints and a dedicated tooling suite:
+v3.0.0 transforms the workflow from a "guideline" into an "enforced protocol" using four layers of constraints and a dedicated tooling suite:
 
 ### 1. 防偷跑 (State Lock)
 Prevents the AI from jumping straight to implementation.
@@ -39,7 +39,7 @@ Ensures long-term maintainability and clean history.
 
 ## 🛠️ Enforcement & Tooling
 
-To move from "self-discipline" to "system-discipline," v2.2.0 introduces:
+To move from "self-discipline" to "system-discipline," v3.0.0 introduces:
 
 ### 1. Output Templates
 Stop guessing the format. Use the standardized templates in `/templates` for every phase:
@@ -89,7 +89,7 @@ Check out the `/examples/perfect-run` folder for a gold-standard execution of th
 
 ---
 
-## 🏆 Why v2.2.0?
+## 🏆 Why v3.0.0?
 
 Most AI agents suffer from **"The Completion Bias"** — the urge to provide a complete answer immediately, regardless of correctness. `vibecode-workflow` replaces this bias with **"Engineering Discipline"**:
 
